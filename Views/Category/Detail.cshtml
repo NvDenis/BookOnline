@@ -1,0 +1,21 @@
+﻿@model List<bookstore.Models.Book>
+@{
+    ViewData["Title"] = ViewBag.TopicName;
+}
+
+<h3>@ViewBag.TopicName</h3>
+
+<div class="row">
+    @foreach (var book in Model)
+    {
+        <div class="col-md-4">
+            <div class="card">
+                <img src="@book.img" class="card-img-top" />
+                <div class="card-body">
+                    <h5 class="card-title">@book.name</h5>
+                    <p>@book.description</p>
+                </div>
+            </div>
+        </div>
+    }
+</div>

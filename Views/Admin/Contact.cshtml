@@ -1,0 +1,37 @@
+﻿@model List<bookstore.Models.Contact>
+
+@{
+    ViewData["Title"] = "Danh sách liên hệ";
+}
+
+<h2>Danh sách liên hệ</h2>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Người gửi</th>
+            <th>Người nhận</th>
+            <th>Số điện thoại</th>
+            <th>Chủ đề</th>
+            <th>Nội dung</th>
+            <th>file</th>
+            <th>Ngày gửi</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item._id</td>
+                <td>@item.Sender</td>
+                <td>@item.Receiver</td>
+                <td>@item.Phone</td>
+                <td>@item.Subject</td>
+                <td>@item.Note</td>
+                <td>@item.AttachmentName</td>
+                <td>@item.SendDate</td>
+            </tr>
+        }
+    </tbody>
+</table>

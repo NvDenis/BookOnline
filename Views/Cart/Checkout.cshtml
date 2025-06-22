@@ -1,0 +1,33 @@
+﻿@model List<bookstore.Models.CartItem>
+
+<h2>Xác nhận đơn hàng</h2>
+
+<form asp-action="CheckoutPost" method="post">
+    @Html.AntiForgeryToken()
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Sách</th>
+                <th>Giá</th>
+                <th>Số lượng</th>
+                <th>Thành tiền</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Price.ToString("N0") ₫</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.TotalPrice.ToString("N0") ₫</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h4>Tổng cộng: @Model.Sum(i => i.TotalPrice).ToString("N0") ₫</h4>
+
+    <button class="btn btn-success">Đặt hàng</button>
+</form>

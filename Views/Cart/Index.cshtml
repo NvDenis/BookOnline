@@ -1,0 +1,64 @@
+﻿@model List<bookstore.Models.CartItem>
+
+<h2>Giỏ hàng</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Sách</th>
+            <th>Giá</th>
+            <th>Số lượng</th>
+            <th>Thành tiền</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Price.ToString("N0") ₫</td>
+                <td>
+                    <form data-book-id="@item.BookId" onsubmit="return false;" class="quantity-form d-flex align-items-center">
+                        @Html.AntiForgeryToken()
+                        <input type="number" name="quantity" value="@item.Quantity" min="1"
+                               class="form-control form-control-sm w-50 me-2 quantity-input" />
+                    </form>
+                </td>
+                <td>@item.TotalPrice.ToString("N0") ₫</td>
+                <td>
+                    <a class="btn btn-danger btn-sm" href="/cart/remove/@item.BookId">Xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a class="btn btn-warning" href="/cart/clear">Xóa hết</a>
+<a class="btn btn-success" href="/dat-hang">Đặt hàng</a>
+
+@section Scripts {
+<script>
+    document.querySelectorAll('.quantity-input').forEach(input => {
+        input.addEventListener('blur', async () => {
+            const form = input.closest('.quantity-form');
+            const bookId = form.getAttribute('data-book-id');
+            const quantity = input.value;
+
+            if (quantity <= 0) return;
+
+            await fetch('/cart/updatequantity', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                },
+                body: `bookId=${bookId}&quantity=${quantity}`
+            });
+
+            // Reload để cập nhật tổng tiền (hoặc cập nhật DOM nếu muốn đẹp hơn)
+            location.reload();
+        });
+    });
+</script>
+}
+

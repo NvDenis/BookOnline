@@ -1,0 +1,16 @@
+﻿@{
+    var publishers = ViewBag.Publishers as List<bookstore.Models.Publisher>;
+}
+
+<div class="mt-4">
+    <h6 class="bg-primary text-white p-2">SÁCH THEO NHÀ XUẤT BẢN</h6>
+    <ul class="list-group">
+        @foreach (var cd in publishers)
+        {
+            <a href="/category-detail/@cd._id" class="text-decoration-none">
+            <li class="list-group-item">@cd.name</li>
+            </a>
+        }
+    </ul>
+</div>
+

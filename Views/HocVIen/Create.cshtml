@@ -1,0 +1,54 @@
+﻿@model bookstore.Models.HocVien
+
+<style>
+    form {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        margin: auto;
+    }
+
+        form p {
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="file"],
+    textarea {
+        width: 100%;
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+
+    input[type="submit"] {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+</style>
+
+
+@using (Html.BeginForm("Create", "HocVien", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <p>Mã học viên: @Html.TextBoxFor(m => m.MaHocVien)</p>
+    <p>Họ và tên: @Html.TextBoxFor(m => m.HoTen)</p>
+    <p>Giới tính: @Html.TextBoxFor(m => m.GioiTinh)</p>
+    <p>Ngày sinh: @Html.TextBoxFor(m => m.NgaySinh, "{0:yyyy-MM-dd}", new { type = "date" })</p>
+    <p>Học phí: @Html.TextBoxFor(m => m.HocPhi)</p>
+    <p>Hình: <input type="file" name="HinhFile" /></p>
+    <p>Ghi chú: @Html.TextAreaFor(m => m.GhiChu)</p>
+    <input type="submit" value="Lưu" />
+}

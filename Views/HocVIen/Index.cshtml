@@ -1,0 +1,58 @@
+﻿@model List<bookstore.Models.HocVien>
+
+<style>
+    table {
+        width: 90%;
+        margin: auto;
+        border-collapse: collapse;
+        background: #fff;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    th {
+        background-color: #007bff;
+        color: white;
+        padding: 12px;
+        text-align: left;
+    }
+
+    td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    tr:hover {
+        background-color: #f2f2f2;
+    }
+
+    img {
+        border-radius: 4px;
+    }
+</style>
+
+
+<table border="1">
+    <tr>
+        <th>Mã HV</th>
+        <th>Họ tên</th>
+        <th>Giới tính</th>
+        <th>Ngày sinh</th>
+        <th>Học phí</th>
+        <th>Hình</th>
+        <th>Ghi chú</th>
+    </tr>
+    @foreach (var hv in Model)
+    {
+        <tr>
+            <td>@hv.MaHocVien</td>
+            <td>@hv.HoTen</td>
+            <td>@hv.GioiTinh</td>
+            <td>@hv.NgaySinh.ToShortDateString()</td>
+            <td>@hv.HocPhi</td>
+            <td><img src="~/Uploads/@hv.Hinh" width="80" /></td>
+            <td>@hv.GhiChu</td>
+        </tr>
+    }
+</table>
