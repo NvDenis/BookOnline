@@ -8,7 +8,9 @@ namespace bookstore.Models
         public int _id { get; set; }
         public string name { get; set; }
         public decimal price { get; set; }
-        public string img { get; set; }
+        public decimal price_original { get; set; }
+        // Bỏ [Required] để không bắt buộc khi sửa
+        public string imgs { get; set; } = "[]"; // ✅ Gán mặc định mảng rỗng nếu cần
         public string description { get; set; }
         public int sold { get; set; }
         public int id_publisher { get; set; }

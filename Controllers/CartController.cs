@@ -68,7 +68,7 @@ namespace bookstore.Controllers
                 {
                     BookId = id,
                     Name = book.name,
-                    Img = book.img,
+                    Img = book.imgs,
                     Price = book.price,
                     Quantity = 1
                 });

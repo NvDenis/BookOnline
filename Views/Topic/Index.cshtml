@@ -1,0 +1,33 @@
+﻿@model List<bookstore.Models.Topic>
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml"; // dùng layout admin
+    ViewData["Title"] = "Quản lý chủ đề";
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+<h2>Danh sách chủ đề</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Tên chủ đề</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Model)
+        {
+            <tr>
+                <td>@book.name</td>
+                <td>
+                    <a class="btn btn-sm btn-warning" href="/admin/topic/edit/@book._id">Sửa</a>
+                    <a class="btn btn-sm btn-danger" href="/admin/topic/delete/@book._id">Xoá</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

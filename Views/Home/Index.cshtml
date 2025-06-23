@@ -1,13 +1,33 @@
 ﻿@model IPagedList<bookstore.Models.Book>
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@using System.Text.Json
+<style>
+    /* Đổi màu nền cho nút phân trang */
+    .pagination .page-link {
+        background-color: #f8f9fa; /* Màu nền mặc định */
+        color: #212529;
+        border: 1px solid #dee2e6;
+    }
 
+    .pagination .page-item.active .page-link {
+        background-color: #212529; /* Màu nền cho trang đang chọn */
+        color: #fff;
+        border-color: #212529;
+    }
+
+    .pagination .page-link:hover {
+        background-color: #343a40; /* Màu khi hover */
+        color: #fff;
+    }
+</style>
 @{
     ViewData["Title"] = "Trang chủ";
     var currentSort = HttpContextAccessor.HttpContext.Request.Query["sortOrder"].ToString();
 }
 
+@await Html.PartialAsync("_Banner")
+
 <div class="text-center container">
-    @await Html.PartialAsync("_Banner")
     <div class="row">
         <div class="col-md-3">
             @await Html.PartialAsync("_Topics")
@@ -28,7 +48,7 @@
                             <option value="newest" selected="@(currentSort == "newest")">Mới nhất</option>
                             <option value="oldest" selected="@(currentSort == "oldest")">Cũ nhất</option>
                         </select>
-                        <button class="btn btn-primary" type="submit">Lọc</button>
+                        <button class="btn text-white" type="submit" style="background-color: #212529">Lọc</button>
                     </div>
                 </form>
             </div>
@@ -37,18 +57,23 @@
                 @foreach (var book in Model)
                 {
                     <div class="col-md-4 mb-4">
-                        <div class="card h-100 text-center w-100">
+                        <div class="card h-100 w-100 p-2">
                             <a href="/book/@book._id">
-                                <img src="@book.img" class="mx-auto d-block"
-                                     style="height: 250px; width: auto; object-fit: contain;" alt="@book.name">
+                                @{
+                                    var imgList = JsonSerializer.Deserialize<List<string>>(book.imgs ?? "[]");
+                                    var firstImg = imgList.FirstOrDefault() ?? "/img/default.jpg"; // đường dẫn ảnh fallback nếu null
+                                }
+                                <img src="@firstImg" class="mx-auto d-block"
+                                     style="max-height: 190px; width: auto; object-fit: contain;" alt="@book.name">
                             </a>
                             <div class="card-body">
                                 <a href="/book/@book._id">
-                                    <h5 class="card-title">@book.name</h5>
+                                    <h5  style="text-align: left;color: #212529">@book.name</h5>
                                 </a>
-                                <p class="card-text">@book.description</p>
-                                <p class="fw-bold text-danger">@book.price.ToString("N0") ₫</p>
-                                <a class="btn btn-primary" href="/cart/addtocart/@book._id">Thêm vào giỏ</a>
+                                <p style="text-align: left;" class="m-0 fw-bold text-danger">@book.price.ToString("N0") ₫</p>
+                                <p style="text-align: left;" class="m-0 text-danger">@book.price_original.ToString("N0") ₫</p>
+
+                                <a class="btn btn-primary mt-2 w-100" href="/cart/addtocart/@book._id" style="background-color: #212529">Thêm vào giỏ</a>
                             </div>
                         </div>
                     </div>
@@ -56,7 +81,7 @@
             </div>
 
             <!-- Phân trang -->
-            <nav class="d-flex justify-content-center mt-4">
+            <nav class="d-flex justify-content-center mt-4" >
                 @Html.PagedListPager(Model, page => Url.Action("Index", new
                 {
                     page,

@@ -1,0 +1,18 @@
+﻿@model bookstore.Models.Publisher
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    ViewData["Title"] = "Xoá chủ đề";
+}
+<h2>Bạn có chắc muốn xoá chủ đề này?</h2>
+
+<div class="alert alert-danger">
+    <strong>@Model.name</strong><br />
+</div>
+
+<form asp-action="ConfirmDelete" method="post" asp-route-id="@Model._id" method="post" asp-antiforgery="true">
+    <!-- Đảm bảo có AntiForgeryToken -->
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="_id" /> <!-- ✅ Thiếu dòng này sẽ không xoá được -->
+    <button type="submit" class="btn btn-danger">Xoá</button>
+    <a href="/admin/book" class="btn btn-secondary">Huỷ</a>
+</form>

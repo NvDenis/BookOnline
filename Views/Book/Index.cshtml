@@ -1,0 +1,33 @@
+﻿@model List<bookstore.Models.Book>
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml"; // dùng layout admin
+    ViewData["Title"] = "Quản lý sách";
+}
+<h2>Danh sách sách</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Tên sách</th>
+            <th>Giá</th>
+            <th>Giá niêm yết</th>
+            <th>Mô tả</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Model)
+        {
+            <tr>
+                <td>@book.name</td>
+                <td>@book.price.ToString("N0") ₫</td>
+                <td>@book.price.ToString("N0") đ</td>
+                <td>@book.description</td>
+                <td>
+                    <a class="btn btn-sm btn-warning" href="/admin/book/edit/@book._id">Sửa</a>
+                    <a class="btn btn-sm btn-danger" href="/admin/book/delete/@book._id">Xoá</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

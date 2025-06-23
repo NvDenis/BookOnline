@@ -1,0 +1,33 @@
+﻿@model List<bookstore.Models.Publisher>
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml"; // dùng layout admin
+    ViewData["Title"] = "Quản lý nhà xuất bản";
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+<h2>Danh sách nhà xuất bản</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Tên nhà xuất bản</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Model)
+        {
+            <tr>
+                <td>@book.name</td>
+                <td>
+                    <a class="btn btn-sm btn-warning" href="/admin/publisher/edit/@book._id">Sửa</a>
+                    <a class="btn btn-sm btn-danger" href="/admin/publisher/delete/@book._id">Xoá</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

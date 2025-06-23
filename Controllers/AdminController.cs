@@ -8,24 +8,36 @@ namespace bookstore.Controllers
     {
         private readonly AppDbContext _context;
 
+        public IActionResult Index()
+        {
+            var email = HttpContext.Session.GetString("user_email");
+            var name = HttpContext.Session.GetString("user_name");
+            var role = HttpContext.Session.GetString("role");
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(name) || string.IsNullOrEmpty(role) || role != "admin")
+            {
+                return RedirectToAction("Login");
+            }
+            return View();
+        }
+
         public AdminController(AppDbContext context)
         {
             _context = context;
         }
 
-        // Route: /admin
-        public IActionResult Index()
-        {
-            var role = HttpContext.Session.GetString("role");
-            var email = HttpContext.Session.GetString("user_email");
+        //// Route: /admin
+        //public IActionResult Index()
+        //{
+        //    var role = HttpContext.Session.GetString("role");
+        //    var email = HttpContext.Session.GetString("user_email");
 
-            if (!string.IsNullOrEmpty(email) && role == "admin")
-            {
-                return View("AdminHome"); // Giao diện admin
-            }
+        //    if (!string.IsNullOrEmpty(email) && role == "admin")
+        //    {
+        //        return View("AdminHome"); // Giao diện admin
+        //    }
 
-            return RedirectToAction("Login");
-        }
+        //    return RedirectToAction("Login");
+        //}
 
         // GET: /admin/login
         [HttpGet]
@@ -59,7 +71,7 @@ namespace bookstore.Controllers
                 HttpContext.Session.SetString("user_email", user.email);
                 HttpContext.Session.SetString("user_name", user.name);
                 HttpContext.Session.SetString("role", user.role);
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Admin");
             }
 
             ViewBag.Error = "Sai thông tin hoặc không có quyền admin";
