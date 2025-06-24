@@ -1,41 +1,43 @@
 ﻿@model List<bookstore.Models.CartItem>
 
-<h2>Giỏ hàng</h2>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Sách</th>
-            <th>Giá</th>
-            <th>Số lượng</th>
-            <th>Thành tiền</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+<div class="container" style="min-height: calc(100vh - 154px);">
+    <h2 class="text-center">Giỏ hàng</h2>
+    <table class="table">
+        <thead>
             <tr>
-                <td>@item.Name</td>
-                <td>@item.Price.ToString("N0") ₫</td>
-                <td>
-                    <form data-book-id="@item.BookId" onsubmit="return false;" class="quantity-form d-flex align-items-center">
-                        @Html.AntiForgeryToken()
-                        <input type="number" name="quantity" value="@item.Quantity" min="1"
-                               class="form-control form-control-sm w-50 me-2 quantity-input" />
-                    </form>
-                </td>
-                <td>@item.TotalPrice.ToString("N0") ₫</td>
-                <td>
-                    <a class="btn btn-danger btn-sm" href="/cart/remove/@item.BookId">Xóa</a>
-                </td>
+                <th>Sách</th>
+                <th>Giá</th>
+                <th>Số lượng</th>
+                <th>Thành tiền</th>
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Name</td>
+                    <td>@item.Price.ToString("N0") ₫</td>
+                    <td>
+                        <form data-book-id="@item.BookId" onsubmit="return false;" class="quantity-form d-flex align-items-center">
+                            @Html.AntiForgeryToken()
+                            <input type="number" name="quantity" value="@item.Quantity" min="1"
+                                   class="form-control form-control-sm w-50 me-2 quantity-input" />
+                        </form>
+                    </td>
+                    <td>@item.TotalPrice.ToString("N0") ₫</td>
+                    <td>
+                        <a class="btn btn-danger btn-sm" href="/cart/remove/@item.BookId">Xóa</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <h4>Tạm tính: @Model.Sum(i => i.TotalPrice).ToString("N0") ₫</h4>
 
-<a class="btn btn-warning" href="/cart/clear">Xóa hết</a>
-<a class="btn btn-success" href="/dat-hang">Đặt hàng</a>
-
+    <a class="btn btn-warning" href="/cart/clear">Xóa hết</a>
+    <a class="btn btn-success" href="/dat-hang">Đặt hàng</a>
+</div>
 @section Scripts {
 <script>
     document.querySelectorAll('.quantity-input').forEach(input => {

@@ -1,6 +1,8 @@
 ﻿using bookstore.Data;
 using bookstore.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Text.Json; // nhớ thêm namespace
 
 [Route("admin/book")]
 public class BookController : Controller
@@ -19,20 +21,30 @@ public class BookController : Controller
         return View(books);
     }
 
-    [HttpGet("edit/{id}")]
-    public IActionResult Edit(int id)
+    [HttpGet("add")]
+    public IActionResult Add()
     {
-        Console.WriteLine($"Gọi POST Edit: {id}"); // Viết trong action C#, không viết trong view Razor
-        var book = _context.Books.Find(id);
-        if (book == null) return NotFound();
-        return View(book);
+        ViewBag.Publishers = _context.Publishers
+        .Select(p => new SelectListItem { Value = p._id.ToString(), Text = p.name })
+        .ToList();
+
+        ViewBag.Topics = _context.Topics
+            .Select(t => new SelectListItem { Value = t._id.ToString(), Text = t.name })
+            .ToList();
+
+        var model = new BookUploadViewModel
+        {
+            Book = new Book()
+        };
+
+        return View(model); // ✅ đúng kiểu
     }
 
-    [HttpPost("edit/{id}")]
-    public IActionResult Edit(int id, Book model)
+    [HttpPost("add")]
+    public IActionResult Add(BookUploadViewModel model)
     {
-        Console.WriteLine($"Model received - ID: {model._id}, Name: {model.name}, Price: {model.price}");
-
+        // Thêm sách mới
+           
         if (!ModelState.IsValid)
         {
             Console.WriteLine("ModelState errors:");
@@ -48,6 +60,124 @@ public class BookController : Controller
 
         try
         {
+
+
+            List<string> imgPaths = new List<string>();
+
+            // Xử lý nhiều file upload
+            if (model.ImageFiles != null && model.ImageFiles.Count > 0)
+            {
+                var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
+                if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
+
+                foreach (var file in model.ImageFiles)
+                {
+                    if (file.Length > 0)
+                    {
+                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                        var filePath = Path.Combine(uploadPath, fileName);
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            file.CopyTo(stream);
+                        }
+
+                        imgPaths.Add("/uploads/" + fileName); // lưu đường dẫn web
+                    }
+                }
+            }
+
+            var imgsJson = System.Text.Json.JsonSerializer.Serialize(imgPaths);
+
+
+            var book = new Book
+            {
+                name = model.Book.name,
+                price = model.Book.price,
+                price_original = model.Book.price_original,
+                description = model.Book.description,
+                id_publisher = model.Book.id_publisher,
+                id_topic = model.Book.id_topic,
+                imgs = imgsJson
+            };
+            _context.Books.Add(book);
+            _context.SaveChanges();
+            return RedirectToAction("Index");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Database error: {ex.Message}");
+            ModelState.AddModelError("", "Lỗi khi lưu dữ liệu");
+            return View(model);
+        }
+    }
+
+    [HttpGet("edit/{id}")]
+    public IActionResult Edit(int id)
+    {
+        var book = _context.Books.Find(id);
+        if (book == null) return NotFound();
+
+        ViewBag.Publishers = _context.Publishers
+       .Select(p => new SelectListItem { Value = p._id.ToString(), Text = p.name })
+       .ToList();
+
+        ViewBag.Topics = _context.Topics
+            .Select(t => new SelectListItem { Value = t._id.ToString(), Text = t.name })
+            .ToList();
+
+        var model = new BookUploadViewModel
+        {
+            Book = book,
+
+        };
+
+        return View(model); // ✅ đúng kiểu
+    }
+
+    [HttpPost("edit/{id}")]
+    public IActionResult Edit(int id, BookUploadViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            Console.WriteLine("ModelState errors:");
+            foreach (var state in ModelState)
+            {
+                foreach (var error in state.Value.Errors)
+                {
+                    Console.WriteLine($"{state.Key}: {error.ErrorMessage}");
+                }
+            }
+            return View(model);
+        }
+
+        try
+        {
+            List<string> imgPaths = new List<string>();
+
+            // Xử lý nhiều file upload
+            if (model.ImageFiles != null && model.ImageFiles.Count > 0)
+            {
+                var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads");
+                if (!Directory.Exists(uploadPath)) Directory.CreateDirectory(uploadPath);
+
+                foreach (var file in model.ImageFiles)
+                {
+                    if (file.Length > 0)
+                    {
+                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                        var filePath = Path.Combine(uploadPath, fileName);
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            file.CopyTo(stream);
+                        }
+
+                        imgPaths.Add("/uploads/" + fileName); // lưu đường dẫn web
+                    }
+                }
+            }
+
+            var imgsJson = System.Text.Json.JsonSerializer.Serialize(imgPaths);
+
             var book = _context.Books.Find(id);
             if (book == null)
             {
@@ -55,14 +185,15 @@ public class BookController : Controller
                 return NotFound();
             }
 
-            book.name = model.name;
-            book.price = model.price;
-            book.price_original = model.price_original;
-            book.description = model.description;
+            book.name = model.Book.name;
+            book.price = model.Book.price;
+            book.price_original = model.Book.price_original;
+            book.description = model.Book.description;
+            book.id_publisher = model.Book.id_publisher;
+            book.id_topic = model.Book.id_topic;
+            book.imgs = imgsJson; // Cập nhật ảnh mới
 
             var changes = _context.SaveChanges();
-            Console.WriteLine($"Saved changes: {changes} row(s) affected");
-
             return RedirectToAction("Index");
         }
         catch (Exception ex)

@@ -71,8 +71,8 @@
                                     <h5  style="text-align: left;color: #212529">@book.name</h5>
                                 </a>
                                 <p style="text-align: left;" class="m-0 fw-bold text-danger">@book.price.ToString("N0") ₫</p>
-                                <p style="text-align: left;" class="m-0 text-danger">@book.price_original.ToString("N0") ₫</p>
-
+                                @* <p style="text-align: left;" class="m-0 text-danger">@book.price_original.ToString("N0") ₫</p> *@
+                                <p style="text-align: left; text-decoration: line-through; color: lightgray">@book.price_original.ToString("N0") ₫</p>
                                 <a class="btn btn-primary mt-2 w-100" href="/cart/addtocart/@book._id" style="background-color: #212529">Thêm vào giỏ</a>
                             </div>
                         </div>

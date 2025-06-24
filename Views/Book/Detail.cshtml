@@ -1,5 +1,14 @@
 ﻿@model bookstore.Models.Book
 @using System.Text.Json
+<style>
+    /* Áp dụng cho mọi ảnh bên trong nội dung mô tả */
+    .book-description img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 10px auto;
+    }
+</style>
 @if (Model == null)
 {
     <div class="alert alert-warning text-center my-5">
@@ -9,21 +18,48 @@
 else
 {
     <div class="container my-5">
-        <div class="row justify-content-center">
-            <div class="col-md-4 text-center">
+        <div class="row mb-5">
+            <div class="col-md-4">
                 @{
                     var imgList = JsonSerializer.Deserialize<List<string>>(@Model.imgs ?? "[]");
                     var firstImg = imgList.FirstOrDefault() ?? "/img/default.jpg"; // đường dẫn ảnh fallback nếu null
                 }
                 <img src="@firstImg" alt="@Model.name" class="img-fluid rounded shadow" style="max-height: 400px; object-fit: contain;" />
+                <div  class="mt-3">
+                   
+                    <div id="preview-container" class="d-flex flex-wrap">
+                        @foreach (var img in imgList)
+                        {
+                            <img src="@img" alt="@Model.name" class="img-thumbnail me-2 mb-2" style="max-width: 120px; max-height: 120px; object-fit: cover;" />
+                        }
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-8">
                 <h2 class="fw-bold mb-3">@Model.name</h2>
-                <p class="mb-4">@Model.description</p>
+                
                 <div class="mb-4">
                     <span class="fw-bold fs-4 text-danger">@Model.price.ToString("N0") ₫</span>
+                    <br />
+                    <span style="text-decoration: line-through; color: lightgray">@Model.price_original.ToString("N0") ₫</span>
                 </div>
-                <a class="btn text-white" href="/cart/addtocart/@Model._id" style="background-color: #212529">Thêm vào giỏ</a>
+
+                <form action="/cart/addtocart" method="post" class="mt-4">
+                    <input type="hidden" name="id" value="@Model._id" />
+                    <div class="d-flex align-items-center mb-2">
+                        <input type="number" name="quantity" id="quantity" value="1" min="1" class="form-control w-auto" />
+                    </div>
+                    <button type="submit" class="btn text-white py-2 px-5" style="background-color: #212529; border-radius: 2px">
+                        <i class="bi bi-bag"></i>
+                        <span class="ms-2">Thêm vào giỏ hàng</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="book-description">
+                @Html.Raw(Model.description)
             </div>
         </div>
     </div>

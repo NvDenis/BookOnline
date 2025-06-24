@@ -7,8 +7,11 @@ namespace bookstore.Models
         [Key]
         public int _id { get; set; }
         public int id_user { get; set; }
+        public string name { get; set; }
+        public string address { get; set; }
         public DateTime order_date { get; set; } = DateTime.Now;
         public decimal total_amount { get; set; }
+
 
         public List<BillDetail> BillDetails { get; set; } = new();
     }

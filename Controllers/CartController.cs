@@ -172,7 +172,7 @@ namespace bookstore.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CheckoutPost()
+        public async Task<IActionResult> CheckoutPost(string name, string address)
         {
             var userId = HttpContext.Session.GetInt32("user_id");
             if (userId == null)
@@ -191,6 +191,8 @@ namespace bookstore.Controllers
             var bill = new Bill
             {
                 id_user = userId.Value,
+                name = name,
+                address = address,
                 order_date = DateTime.Now,
                 total_amount = total
             };
@@ -295,6 +297,34 @@ namespace bookstore.Controllers
         public IActionResult OrderSuccess()
         {
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult AddToCart(int id, int quantity)
+        {
+            var book = _context.Books.FirstOrDefault(b => b._id == id);
+            if (book == null) return NotFound();
+
+            var cart = GetCart();
+            var item = cart.FirstOrDefault(c => c.BookId == id);
+            if (item != null)
+            {
+                item.Quantity += quantity; // tăng số lượng
+            }
+            else
+            {
+                cart.Add(new CartItem
+                {
+                    BookId = id,
+                    Name = book.name,
+                    Img = book.imgs,
+                    Price = book.price,
+                    Quantity = quantity
+                });
+            }
+
+            SaveCart(cart);
+            return RedirectToAction("Index");
         }
     }
 }

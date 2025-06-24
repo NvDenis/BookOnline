@@ -1,43 +1,12 @@
 ﻿@model BookUploadViewModel
 @{
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
-    ViewData["Title"] = "Chỉnh sửa sách";
+    ViewData["Title"] = "Thêm sách";
 }
 
-<h2>Chỉnh sửa sách</h2>
+<h2>Thêm sách</h2>
 
-@* <form asp-action="Edit" asp-route-id="@Model._id" method="post" asp-antiforgery="true">
-    <!-- Đảm bảo có AntiForgeryToken -->
-    @Html.AntiForgeryToken()
-    <!-- ✅ PHẢI có dòng này để truyền lại _id khi POST -->
-    <input type="hidden" asp-for="_id"  />
-
-    <div class="mb-3">
-        <label class="form-label">Tên sách</label>
-        <input asp-for="name" class="form-control" />
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Giá bán</label>
-        <input asp-for="price" class="form-control" />
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Giá gốc</label>
-        <input asp-for="price_original" class="form-control" />
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Mô tả</label>
-        <textarea asp-for="description" class="form-control"></textarea>
-    </div>
-    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-    <a href="/admin/book" class="btn btn-secondary">Quay lại</a>
-</form> *@
-
-
-<form asp-action="Edit" asp-route-id="@Model.Book._id" method="post" enctype="multipart/form-data">
-    <!-- Đảm bảo có AntiForgeryToken -->
-    @Html.AntiForgeryToken()
-    <!-- ✅ PHẢI có dòng này để truyền lại _id khi POST -->
-    <input type="hidden" asp-for="Book._id" />
+<form asp-action="Add" method="post" enctype="multipart/form-data">
     <div class="mt-2" id="preview-container">
         @foreach (var img in GetAllImages(Model.Book?.imgs))
         {
@@ -80,16 +49,16 @@
 
 
 
-    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+    <button type="submit" class="btn btn-primary">Thêm sách</button>
     <a href="/admin/book" class="btn btn-secondary">Quay lại</a>
 </form>
+
 
 
 @section Scripts {
     <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
     <script>
         CKEDITOR.replace('Description');
-
 
         function previewImages(input) {
             const container = document.getElementById('preview-container');
@@ -111,7 +80,6 @@
         }
     </script>
 }
-
 
 @functions {
     public List<string> GetAllImages(string imgsJson)

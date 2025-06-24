@@ -1,13 +1,20 @@
-﻿@model List<bookstore.Models.Book>
+﻿@using System.Text.Json
+@model List<bookstore.Models.Book>
 @{
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml"; // dùng layout admin
     ViewData["Title"] = "Quản lý sách";
 }
-<h2>Danh sách sách</h2>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Danh sách sách</h2>
+    <a class="btn btn-primary" href="/admin/book/add">
+        Thêm sách
+    </a>
+</div>
 
 <table class="table table-bordered">
     <thead>
         <tr>
+            <th>Ảnh</th>
             <th>Tên sách</th>
             <th>Giá</th>
             <th>Giá niêm yết</th>
@@ -19,10 +26,30 @@
         @foreach (var book in Model)
         {
             <tr>
+                <td>
+                    @{
+                        var imgs = string.IsNullOrEmpty(book.imgs)
+                        ? new List<string>()
+                        : JsonSerializer.Deserialize<List<string>>(book.imgs);
+                    }
+
+                    @if (imgs != null && imgs.Count > 0)
+                    {
+                        <img src="@imgs[0]" style="max-width: 100px;" />
+                    }
+                </td>
                 <td>@book.name</td>
                 <td>@book.price.ToString("N0") ₫</td>
-                <td>@book.price.ToString("N0") đ</td>
-                <td>@book.description</td>
+                <td>@book.price_original.ToString("N0") đ</td>
+                <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                    @(
+                                    System.Text.RegularExpressions.Regex.Replace(
+                                    book.description ?? "", "<.*?>", ""
+                                    ).Length > 80
+                                    ? System.Text.RegularExpressions.Regex.Replace(book.description ?? "", "<.*?>", "").Substring(0, 80) + "..."
+                                    : System.Text.RegularExpressions.Regex.Replace(book.description ?? "", "<.*?>", "")
+                                    )
+            </td>
                 <td>
                     <a class="btn btn-sm btn-warning" href="/admin/book/edit/@book._id">Sửa</a>
                     <a class="btn btn-sm btn-danger" href="/admin/book/delete/@book._id">Xoá</a>
