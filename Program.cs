@@ -1,7 +1,10 @@
 ﻿using bookstore.Data;
+using bookstore.Services.Vnpay;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
 
 // 🔥 Đăng ký AppDbContext với MySQL
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -10,12 +13,16 @@ builder.Services.AddDbContext<AppDbContext>(options =>
         new MySqlServerVersion(new Version(8, 0, 36)) // hoặc phiên bản MySQL bạn đang dùng
     )
 );
-
+// 
+//builder.Services.AddScoped<IVnPayService, VnPayService>();
+builder.Services.AddScoped<VnPayService>();
 builder.Services.AddControllersWithViews(); // Quan trọng: phải có dòng này để đăng ký MVC
 
 // Add services to the container.
 builder.Services.AddSession(); // 👈 Thêm dòng này trước khi build
 builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddScoped<IVnPayService, VnPayService>(); // Đăng ký dịch vụ VnPayService với IVnPayService
 var app = builder.Build();
 
 builder.Services.AddSession(); // Add this
@@ -34,7 +41,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseSession();
 app.UseAuthorization();
 
 app.MapControllerRoute(

@@ -1,0 +1,91 @@
+﻿@model List<bookstore.Models.Bill>
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml"; // dùng layout admin
+    ViewData["Title"] = "Quản lý đơn hàng";
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+<h2>Danh sách đơn hàng</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Tên người nhận hàng</th>
+            <th>Địa chỉ</th>
+            <th>Phương thức thanh toán</th>
+            <th>TT đơn hàng</th>
+            <th>TT thanh toán</th>
+            <th>Thao tác</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var bill in Model)
+        {
+            <tr data-id="@bill._id">
+                <td>@(bill.name ?? "(Không có tên)")</td>
+                <td>@(bill.address ?? "(Không có địa chỉ)")</td>
+                <td>@bill.payment_method</td>
+                <td>
+                    <select class="form-control shipping-status" data-id="@bill._id">
+                        <option value="chờ xác nhận" selected="@(bill.shipping_status == "chờ xác nhận")">Chờ xác nhận</option>
+                        <option value="đang giao" selected="@(bill.shipping_status == "đang giao")">Đang giao</option>
+                        <option value="đã giao" selected="@(bill.shipping_status == "đã giao")">Đã giao</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="form-control payment-status" data-id="@bill._id">
+                        <option value="chưa thanh toán" selected="@(bill.payment_status == "chưa thanh toán")">Chưa thanh toán</option>
+                        <option value="đã thanh toán" selected="@(bill.payment_status == "đã thanh toán")">Đã thanh toán</option>
+                    </select>
+                </td>
+                <td>
+                    <a class="btn btn-sm btn-danger" href="/admin/book/delete/@bill._id">Xoá</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Xử lý thay đổi trạng thái đơn hàng
+            $('.shipping-status').change(function() {
+                var billId = $(this).data('id');
+                var newStatus = $(this).val();
+
+                updateStatus(billId, 'shipping_status', newStatus);
+            });
+
+            // Xử lý thay đổi trạng thái thanh toán
+            $('.payment-status').change(function() {
+                var billId = $(this).data('id');
+                var newStatus = $(this).val();
+
+                updateStatus(billId, 'payment_status', newStatus);
+            });
+
+            function updateStatus(billId, field, value) {
+            $.ajax({
+                url: '/admin/order/update-status', // Đúng với route controller
+                type: 'POST',
+                data: {
+                    id: billId,
+                    field: field,
+                    value: value
+                },
+                success: function(response) {
+                    toastr.success('Cập nhật trạng thái thành công');
+                },
+                error: function(xhr) {
+                    toastr.error('Có lỗi xảy ra khi cập nhật: ' + xhr.responseText);
+                }
+            });
+        }
+        });
+    </script>
+}
