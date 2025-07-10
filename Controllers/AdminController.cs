@@ -17,6 +17,11 @@ namespace bookstore.Controllers
             {
                 return RedirectToAction("Login");
             }
+
+            ViewBag.TotalBooks = _context.Books.Count();
+            ViewBag.TotalOrders = _context.Bills.Count();
+            ViewBag.TotalRevenue = _context.Bills.Sum(o => (decimal?)o.total_amount) ?? 0;
+
             return View();
         }
 

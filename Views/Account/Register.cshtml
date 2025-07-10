@@ -12,34 +12,9 @@
             <p>@error.ErrorMessage</p>
         }
     </div>
+
+    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
 }
-
-
-@* <h2>Đăng ký</h2> *@
-@* <form asp-action="Register" method="post">
-    <div>
-        <label>Họ và tên</label>
-        <input asp-for="Username" />
-    </div>
-    <div>
-        <label>Email</label>
-        <input asp-for="Email" type="email" />
-    </div>
-
-    <div>
-        <label>Địa chỉ</label>
-        <input asp-for="Address">
-    </div>
-    <div>
-        <label>Mật khẩu</label>
-        <input asp-for="Password" type="password" />
-    </div>
-    <div>
-        <label>Nhập lại mật khẩu</label>
-        <input asp-for="ConfirmPassword" type="password" />
-    </div>
-    <button type="submit">Đăng ký</button>
-</form> *@
 
 
 <div class="d-flex justify-content-center align-items-center my-5" style="min-height: 80vh;">

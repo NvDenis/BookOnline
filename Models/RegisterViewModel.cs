@@ -4,22 +4,23 @@ namespace bookstore.Models
 {
     public class RegisterViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Họ và tên là bắt buộc.")]
         public string Username { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Email là bắt buộc.")]
+        [EmailAddress(ErrorMessage = "Email không hợp lệ.")]
         public string Email { get; set; }
 
 
-        [Required]
+        [Required(ErrorMessage = "Địa chỉ là bắt buộc.")]
         public string Address { get; set; }
 
-        [Required]
-        [DataType(DataType.Password)]
+        [Required(ErrorMessage = "Mật khẩu là bắt buộc.")]
+        [MinLength(8, ErrorMessage = "Mật khẩu phải có ít nhất 8 ký tự.")]
         public string Password { get; set; }
 
+        [Required(ErrorMessage = "Xác nhận mật khẩu là bắt buộc.")]
         [Compare("Password", ErrorMessage = "Mật khẩu xác nhận không khớp.")]
-        [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
     }
 }

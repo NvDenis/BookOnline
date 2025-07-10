@@ -6,32 +6,6 @@
 
 <h2>Chỉnh sửa sách</h2>
 
-@* <form asp-action="Edit" asp-route-id="@Model._id" method="post" asp-antiforgery="true">
-    <!-- Đảm bảo có AntiForgeryToken -->
-    @Html.AntiForgeryToken()
-    <!-- ✅ PHẢI có dòng này để truyền lại _id khi POST -->
-    <input type="hidden" asp-for="_id"  />
-
-    <div class="mb-3">
-        <label class="form-label">Tên sách</label>
-        <input asp-for="name" class="form-control" />
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Giá bán</label>
-        <input asp-for="price" class="form-control" />
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Giá gốc</label>
-        <input asp-for="price_original" class="form-control" />
-    </div>
-    <div class="mb-3">
-        <label class="form-label">Mô tả</label>
-        <textarea asp-for="description" class="form-control"></textarea>
-    </div>
-    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-    <a href="/admin/book" class="btn btn-secondary">Quay lại</a>
-</form> *@
-
 
 <form asp-action="Edit" asp-route-id="@Model.Book._id" method="post" enctype="multipart/form-data">
     <!-- Đảm bảo có AntiForgeryToken -->
@@ -52,6 +26,7 @@
         <label class="form-label">Tên sách</label>
         <input asp-for="Book.name" class="form-control" />
     </div>
+   
     <div class="mb-3">
         <label class="form-label">Giá bán</label>
         <input asp-for="Book.price" class="form-control" />

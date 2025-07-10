@@ -132,7 +132,7 @@ namespace bookstore.Controllers
             var userId = HttpContext.Session.GetInt32("user_id");
             if (userId == null)
             {
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "Account", new { returnUrl = "/gio-hang" });
             }
 
             var cart = GetCart();
@@ -193,7 +193,7 @@ namespace bookstore.Controllers
             var userId = HttpContext.Session.GetInt32("user_id");
             if (userId == null)
             {
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "Account", new { returnUrl = "/gio-hang" });
             }
 
             return View(cart);
@@ -255,7 +255,7 @@ namespace bookstore.Controllers
         {
             var userId = HttpContext.Session.GetInt32("user_id");
             if (userId == null)
-                return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "Account", new { returnUrl = "/gio-hang" });
 
             var cart = GetCart();
             if (cart == null || !cart.Any())

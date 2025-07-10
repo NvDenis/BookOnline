@@ -33,10 +33,13 @@
             }
         </tbody>
     </table>
-    <h4>Tạm tính: @Model.Sum(i => i.TotalPrice).ToString("N0") ₫</h4>
-
-    <a class="btn btn-warning" href="/cart/clear">Xóa hết</a>
-    <a class="btn btn-success" href="/dat-hang">Đặt hàng</a>
+    <div class="d-flex justify-content-end ">
+        <div>
+            <h4>Tạm tính: @Model.Sum(i => i.TotalPrice).ToString("N0") ₫</h4>
+            <a class="btn btn-warning" href="/cart/clear">Xóa hết</a>
+            <a class="btn btn-success" href="/dat-hang">Đặt hàng</a>
+        </div>
+    </div>
 </div>
 @section Scripts {
 <script>
